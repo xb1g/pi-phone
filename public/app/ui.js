@@ -341,7 +341,7 @@ export function renderHeader() {
   el.serverValue.textContent = status.port ? `${status.host || "127.0.0.1"}:${status.port}` : "—";
   
   // Update control center values if open
-  updateControlCenterValues();
+  updateCcSessionInfo();
   
   updateComposerState();
   renderQuota();

@@ -1687,6 +1687,22 @@ select {
   cursor: grabbing;
 }
 
+/* Sheet handle (new control center) */
+.sheet-handle {
+  width: 40px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+  margin: 12px auto 0;
+  cursor: grab;
+  transition: all 0.2s;
+}
+
+.sheet-handle:hover {
+  background: rgba(255, 255, 255, 0.5);
+  transform: scaleX(1.1);
+}
+
 .control-center-header > div {
   text-align: center;
 }
@@ -1698,7 +1714,7 @@ select {
   margin: 0;
 }
 
-.control-center-close-button {
+#control-center-close-button {
   position: absolute;
   top: 1rem;
   right: 1rem;
@@ -1713,9 +1729,11 @@ select {
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s;
+  padding: 0;
+  min-width: auto;
 }
 
-.control-center-close-button:hover {
+#control-center-close-button:hover {
   background: rgba(255, 255, 255, 0.12);
   color: var(--text-primary);
   transform: scale(1.05);
