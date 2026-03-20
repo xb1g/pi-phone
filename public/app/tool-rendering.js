@@ -348,6 +348,45 @@ function isToolPanelOpen(itemId, defaultOpen = false) {
   return defaultOpen;
 }
 
+// Tool icons for collapsed chips
+const TOOL_ICONS = {
+  edit: "✏️",
+  write: "📝",
+  read: "📖",
+  bash: "💻",
+  grep: "🔍",
+  find: "🔍",
+  ls: "📁",
+};
+
+function getToolIcon(toolName) {
+  const normalized = normalizedToolName(toolName);
+  return TOOL_ICONS[normalized] || "🔧";
+}
+
+function getToolSummary(item) {
+  const toolName = normalizedToolName(item.toolName || item.title || "");
+  const icon = getToolIcon(toolName);
+
+  if (item.args?.path) {
+    const path = item.args.path;
+    const filename = path.split("/").pop();
+    return `${icon} ${filename}`;
+  }
+
+  if (item.args?.command) {
+    const cmd = item.args.command.slice(0, 40);
+    return `${icon} ${cmd}${item.args.command.length > 40 ? "…" : ""}`;
+  }
+
+  if (item.args?.pattern) {
+    const pattern = item.args.pattern.slice(0, 30);
+    return `${icon} "${pattern}${item.args.pattern.length > 30 ? "…" : ""}"`;
+  }
+
+  return `${icon} ${toolName}`;
+}
+
 function renderToolPanel(item, {
   variant,
   eyebrow,
@@ -358,13 +397,15 @@ function renderToolPanel(item, {
   defaultOpen = false,
 }) {
   const open = isToolPanelOpen(item.id, defaultOpen);
+  const summary = getToolSummary(item);
 
   return `
     <details class="tool-panel tool-panel-${escapeHtml(variant)}" data-tool-panel="${escapeHtml(item.id)}" ${open ? "open" : ""}>
       <summary class="tool-panel-summary">
-        <div class="tool-panel-summary-copy">
-          <div class="tool-panel-eyebrow">${escapeHtml(eyebrow)}</div>
-          <div class="tool-panel-path mono">${escapeHtml(path)}</div>
+        <div class="tool-chip" data-tool-chip>
+          <span class="tool-chip__icon">${getToolIcon(item.toolName || item.title || "")}</span>
+          <span class="tool-chip__text">${escapeHtml(summary.substring(2))}</span>
+          <span class="tool-chip__chevron">›</span>
         </div>
         <div class="tool-panel-badges">${badges.join("")}</div>
       </summary>
@@ -401,7 +442,7 @@ function renderEditToolContent(item) {
     badges,
     note: typeof details?.diff === "string" ? "" : "Preview from the requested replacement block.",
     content: renderDiffPreview(diffLines, { limit: item.live ? 120 : 80 }),
-    defaultOpen: true,
+    defaultOpen: false,
   });
 }
 
@@ -426,7 +467,7 @@ function renderWriteToolContent(item) {
     badges,
     note: "Preview from the content sent to write.",
     content: renderCodePreview(content, { limit: item.live ? 30 : 24 }),
-    defaultOpen: item.live || lineCount <= 14,
+    defaultOpen: false,
   });
 }
 
@@ -462,7 +503,7 @@ function renderReadToolContent(item) {
     path,
     badges,
     content,
-    defaultOpen: Boolean(imageHtml) || isMarkdownPath(path) || visibleLineCount <= 14,
+    defaultOpen: false,
   });
 }
 
@@ -488,7 +529,7 @@ function renderBashToolContent(item) {
     badges,
     note,
     content: renderTerminalPreview(item.text || "", { limit: item.live ? 140 : 100 }),
-    defaultOpen: true,
+    defaultOpen: item.live, // Keep running tools expanded
   });
 }
 
@@ -507,7 +548,7 @@ function renderGrepToolContent(item) {
     path: searchPath,
     badges,
     content: preview.html,
-    defaultOpen: preview.matchCount > 0,
+    defaultOpen: false,
   });
 }
 
@@ -525,7 +566,7 @@ function renderFindToolContent(item) {
     badges,
     note: notice,
     content: renderListPreview(entries, { limit: 60 }),
-    defaultOpen: entries.length <= 16,
+    defaultOpen: false,
   });
 }
 
@@ -544,7 +585,7 @@ function renderLsToolContent(item) {
     badges,
     note: notice,
     content: renderListPreview(entries, { limit: 80 }),
-    defaultOpen: entries.length <= 20,
+    defaultOpen: false,
   });
 }
 
