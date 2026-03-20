@@ -1,7 +1,7 @@
 import { initializeBindings } from "./bindings.js";
 import { handleAuthFailure, handleEnvelope } from "./handlers.js";
 import { boot } from "./transport.js";
-import { initTheme, toggleTheme, triggerHapticFeedback } from "./ui.js";
+import { initTheme, toggleTheme, triggerHapticFeedback, setupControlCenter, openControlCenter, closeControlCenter } from "./ui.js";
 import { el } from "./state.js";
 
 // Initialize theme on load
@@ -25,9 +25,55 @@ function setupThemeToggle() {
   });
 }
 
+// Setup Control Center
+function setupControlCenterUI() {
+  setupControlCenter();
+  
+  // Control center button
+  el.controlCenterButton?.addEventListener("click", () => {
+    openControlCenter();
+  });
+  
+  // Keyboard shortcut: Alt+C to open control center
+  document.addEventListener("keydown", (e) => {
+    if (e.altKey && e.key === "c") {
+      e.preventDefault();
+      openControlCenter();
+    }
+  });
+  
+  // Listen for control center actions
+  document.addEventListener("control-center-action", (e) => {
+    handleControlCenterAction(e.detail.action);
+  });
+}
+
+function handleControlCenterAction(action) {
+  // Map control center actions to existing functionality
+  const actionMap = {
+    new: () => el.insertCommandButton?.click(),
+    compact: () => showToast("Type /compact in the message box", "info"),
+    reload: () => showToast("Type /reload in the message box", "info"),
+    refresh: () => el.refreshButton?.click(),
+    model: () => showToast("Type /model in the message box", "info"),
+    thinking: () => showToast("Type /thinking in the message box", "info"),
+    sessions: () => el.sessionBrowserButton?.click(),
+    tree: () => el.treeBrowserButton?.click(),
+    stats: () => showToast("Type /stats in the message box", "info"),
+    cost: () => showToast("Type /cost in the message box", "info"),
+    abort: () => el.abortButton?.click(),
+  };
+  
+  const handler = actionMap[action];
+  if (handler) {
+    handler();
+  }
+}
+
 // Initialize all UI enhancements
 function initializeUI() {
   setupThemeToggle();
+  setupControlCenterUI();
   setupMobileOptimizations();
   setupAccessibility();
 }

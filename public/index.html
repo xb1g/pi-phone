@@ -10,13 +10,13 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="description" content="Mobile-first remote UI for Pi coding assistant" />
     <title>Pi Phone</title>
-    <link rel="manifest" href="/manifest.webmanifest?v=20260320-1" />
+    <link rel="manifest" href="/manifest.webmanifest?v=20260320-2" />
     <link rel="icon" href="/icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/icon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="/styles.css?v=20260320-1" />
+    <link rel="stylesheet" href="/styles.css?v=20260320-2" />
   </head>
   <body>
     <!-- Theme Toggle -->
@@ -26,119 +26,56 @@
     </button>
 
     <!-- Session Sidebar Toggle -->
-    <button id="session-sidebar-button" class="sidebar-toggle-button secondary" aria-label="Open session browser" title="Open session browser">
+    <button id="session-sidebar-button" class="sidebar-toggle-button" aria-label="Open session browser" title="Sessions">
       <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <rect x="3" y="3" width="18" height="18" rx="2" />
         <line x1="9" y1="3" x2="9" y2="21" />
       </svg>
-      <span class="button-label">Sessions</span>
     </button>
 
     <div class="app-shell">
-      <!-- Enhanced Topbar -->
+      <!-- Minimal Topbar -->
       <header class="topbar">
-        <div class="topbar-content">
-          <div class="brand">
-            <div class="brand-icon">📱</div>
-            <div class="brand-text">
-              <div class="eyebrow">Pi Phone</div>
-              <h1>Pi, but couch-friendly</h1>
-            </div>
-          </div>
-          <div class="status-indicators">
-            <div class="status-pill" id="connection-pill" title="Connection status">Connecting…</div>
-            <div class="status-pill streaming-indicator hidden" id="streaming-pill" title="Streaming status">
-              <span class="pulse-dot"></span>
-              <span>Streaming</span>
-            </div>
-          </div>
+        <div class="brand">
+          <div class="eyebrow">Pi Phone</div>
+          <h1>Your Pi, anywhere</h1>
         </div>
-        <p class="subtitle">Your Pi setup in a mobile-first UI</p>
+        <div class="status-indicators">
+          <div class="connection-dot" id="connection-dot" title="Connection status"></div>
+        </div>
       </header>
 
-      <!-- Enhanced Status Card -->
-      <section class="status-card">
-        <div class="status-header">
-          <h2>Session Status</h2>
-          <button id="refresh-status-button" class="icon-button" aria-label="Refresh status" title="Refresh status">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M23 4v6h-6M1 20v-6h6" />
-              <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" />
-            </svg>
-          </button>
-        </div>
-        <div class="status-grid">
-          <div class="status-item">
-            <div class="status-icon">📁</div>
-            <div class="status-info">
-              <div class="label">Working Directory</div>
-              <div class="value mono" id="cwd-value">—</div>
+      <!-- Status Module - Clean, Essential Info -->
+      <section class="status-module">
+        <div class="status-module-grid">
+          <div class="status-module-item">
+            <div class="status-module-icon">📁</div>
+            <div class="status-module-content">
+              <div class="status-module-label">Directory</div>
+              <div class="status-module-value mono" id="cwd-value">—</div>
             </div>
           </div>
-          <div class="status-item">
-            <div class="status-icon">💬</div>
-            <div class="status-info">
-              <div class="label">Session</div>
-              <div class="value" id="session-value">—</div>
+          <div class="status-module-item">
+            <div class="status-module-icon">💬</div>
+            <div class="status-module-content">
+              <div class="status-module-label">Session</div>
+              <div class="status-module-value" id="session-value">—</div>
             </div>
           </div>
-          <div class="status-item">
-            <div class="status-icon">🤖</div>
-            <div class="status-info">
-              <div class="label">Model</div>
-              <div class="value" id="model-value">—</div>
+          <div class="status-module-item">
+            <div class="status-module-icon">🤖</div>
+            <div class="status-module-content">
+              <div class="status-module-label">Model</div>
+              <div class="status-module-value" id="model-value">—</div>
             </div>
           </div>
-          <div class="status-item">
-            <div class="status-icon">🧠</div>
-            <div class="status-info">
-              <div class="label">Thinking</div>
-              <div class="value" id="thinking-value">—</div>
+          <div class="status-module-item">
+            <div class="status-module-icon">🧠</div>
+            <div class="status-module-content">
+              <div class="status-module-label">Thinking</div>
+              <div class="status-module-value" id="thinking-value">—</div>
             </div>
           </div>
-          <div class="status-item">
-            <div class="status-icon">⚡</div>
-            <div class="status-info">
-              <div class="label">State</div>
-              <div class="value" id="streaming-value">Idle</div>
-            </div>
-          </div>
-          <div class="status-item">
-            <div class="status-icon">🌐</div>
-            <div class="status-info">
-              <div class="label">Server</div>
-              <div class="value mono" id="server-value">—</div>
-            </div>
-          </div>
-        </div>
-        <div class="button-row compact status-actions">
-          <button id="actions-button" class="secondary">
-            <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="3" />
-              <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z" />
-            </svg>
-            Actions
-          </button>
-          <button id="refresh-button" class="secondary">
-            <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M23 4v6h-6M1 20v-6h6" />
-              <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" />
-            </svg>
-            Refresh
-          </button>
-          <button id="tree-browser-button" class="secondary">
-            <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z" />
-            </svg>
-            Tree
-          </button>
-          <button id="abort-button" class="danger">
-            <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10" />
-              <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
-            </svg>
-            Abort
-          </button>
         </div>
       </section>
 
@@ -196,7 +133,7 @@
           
           <!-- Composer Actions -->
           <div class="composer-actions">
-            <button id="insert-command-button" class="secondary action-chip">
+            <button id="insert-command-button" class="action-chip">
               <svg class="icon-tiny" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="4 7 4 4 20 4 20 7" />
                 <line x1="9" y1="20" x2="15" y2="20" />
@@ -204,20 +141,15 @@
               </svg>
               Commands
             </button>
-            <button id="cd-command-button" class="secondary action-chip">
+            <button id="cd-command-button" class="action-chip">/cd</button>
+            <button id="control-center-button" class="action-chip primary-chip">
               <svg class="icon-tiny" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z" />
+                <circle cx="12" cy="12" r="3" />
+                <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z" />
               </svg>
-              /cd
+              Control
             </button>
-            <button id="session-browser-button" class="secondary action-chip">
-              <svg class="icon-tiny" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="3" width="18" height="18" rx="2" />
-                <line x1="9" y1="3" x2="9" y2="21" />
-              </svg>
-              Sessions
-            </button>
-            <button id="steer-button" class="secondary action-chip hidden">
+            <button id="steer-button" class="action-chip hidden">
               <svg class="icon-tiny" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="12" cy="12" r="3" />
                 <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z" />
@@ -275,22 +207,135 @@
       </div>
     </div>
 
-    <!-- Sheet Modal (Control Center) -->
-    <div id="sheet-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
-      <div class="modal-card sheet-card">
-        <div class="sheet-header">
+    <!-- Control Center (Redesigned) -->
+    <div id="control-center" class="control-center hidden" role="dialog" aria-modal="true" aria-labelledby="control-center-title">
+      <div class="control-center-backdrop" id="control-center-backdrop"></div>
+      <div class="control-center-sheet">
+        <div class="control-center-header">
+          <div class="control-center-drag-handle"></div>
           <div>
-            <div class="eyebrow">Pi control center</div>
-            <h2 id="sheet-title">Actions</h2>
+            <div class="eyebrow">Control Center</div>
+            <h2 id="control-center-title">Session Controls</h2>
           </div>
-          <button id="sheet-close-button" class="icon-button" aria-label="Close">
+          <button id="control-center-close-button" class="icon-button" aria-label="Close">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
         </div>
-        <div id="sheet-content" class="sheet-content"></div>
+        
+        <div class="control-center-content">
+          <!-- Session Actions Grid -->
+          <section class="control-section">
+            <h3 class="control-section-title">Session</h3>
+            <div class="control-grid control-grid-2x2">
+              <button id="cc-new-session" class="control-card">
+                <div class="control-card-icon">✨</div>
+                <div class="control-card-label">New Session</div>
+                <div class="control-card-desc">Start fresh</div>
+              </button>
+              <button id="cc-compact" class="control-card">
+                <div class="control-card-icon">🗜️</div>
+                <div class="control-card-label">Compact</div>
+                <div class="control-card-desc">Save tokens</div>
+              </button>
+              <button id="cc-reload" class="control-card">
+                <div class="control-card-icon">🔄</div>
+                <div class="control-card-label">Reload</div>
+                <div class="control-card-desc">Extensions & skills</div>
+              </button>
+              <button id="cc-refresh" class="control-card">
+                <div class="control-card-icon">↻</div>
+                <div class="control-card-label">Refresh</div>
+                <div class="control-card-desc">Update state</div>
+              </button>
+            </div>
+          </section>
+
+          <!-- Model & Thinking -->
+          <section class="control-section">
+            <h3 class="control-section-title">Intelligence</h3>
+            <div class="control-grid control-grid-1x2">
+              <button id="cc-model" class="control-card control-card-wide">
+                <div class="control-card-icon">🤖</div>
+                <div class="control-card-content">
+                  <div class="control-card-label">Model</div>
+                  <div class="control-card-value" id="cc-model-value">—</div>
+                </div>
+                <div class="control-card-chevron">›</div>
+              </button>
+              <button id="cc-thinking" class="control-card control-card-wide">
+                <div class="control-card-icon">🧠</div>
+                <div class="control-card-content">
+                  <div class="control-card-label">Thinking Level</div>
+                  <div class="control-card-value" id="cc-thinking-value">—</div>
+                </div>
+                <div class="control-card-chevron">›</div>
+              </button>
+            </div>
+          </section>
+
+          <!-- Browse -->
+          <section class="control-section">
+            <h3 class="control-section-title">Browse</h3>
+            <div class="control-grid control-grid-1x2">
+              <button id="cc-sessions" class="control-card control-card-wide">
+                <div class="control-card-icon">💬</div>
+                <div class="control-card-content">
+                  <div class="control-card-label">Sessions</div>
+                  <div class="control-card-desc">View & switch sessions</div>
+                </div>
+                <div class="control-card-chevron">›</div>
+              </button>
+              <button id="cc-tree" class="control-card control-card-wide">
+                <div class="control-card-icon">🌳</div>
+                <div class="control-card-content">
+                  <div class="control-card-label">Session Tree</div>
+                  <div class="control-card-desc">Browse conversation branches</div>
+                </div>
+                <div class="control-card-chevron">›</div>
+              </button>
+            </div>
+          </section>
+
+          <!-- Stats -->
+          <section class="control-section">
+            <h3 class="control-section-title">Analytics</h3>
+            <div class="control-grid control-grid-1x2">
+              <button id="cc-stats" class="control-card control-card-wide">
+                <div class="control-card-icon">📊</div>
+                <div class="control-card-content">
+                  <div class="control-card-label">Session Stats</div>
+                  <div class="control-card-desc">Messages, tokens, timing</div>
+                </div>
+                <div class="control-card-chevron">›</div>
+              </button>
+              <button id="cc-cost" class="control-card control-card-wide">
+                <div class="control-card-icon">💰</div>
+                <div class="control-card-content">
+                  <div class="control-card-label">Cost</div>
+                  <div class="control-card-desc">Token usage & cost</div>
+                </div>
+                <div class="control-card-chevron">›</div>
+              </button>
+            </div>
+          </section>
+
+          <!-- Danger Zone -->
+          <section class="control-section danger-section">
+            <h3 class="control-section-title">Danger Zone</h3>
+            <div class="control-grid control-grid-1x1">
+              <button id="cc-abort" class="control-card control-card-danger">
+                <div class="control-card-icon">⛔</div>
+                <div class="control-card-content">
+                  <div class="control-card-label">Abort</div>
+                  <div class="control-card-desc">Stop current operation</div>
+                </div>
+              </button>
+            </div>
+          </section>
+        </div>
       </div>
     </div>
 
@@ -303,6 +348,6 @@
       <p class="loading-text">Loading…</p>
     </div>
 
-    <script type="module" src="/app.js?v=20260320-1"></script>
+    <script type="module" src="/app.js?v=20260320-2"></script>
   </body>
 </html>

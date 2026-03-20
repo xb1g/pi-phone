@@ -46,6 +46,7 @@ export const el = {
   
   // Status and header
   connectionPill: document.querySelector("#connection-pill"),
+  connectionDot: document.querySelector("#connection-dot"),
   streamingPill: document.querySelector("#streaming-pill"),
   cwdValue: document.querySelector("#cwd-value"),
   sessionValue: document.querySelector("#session-value"),
@@ -77,6 +78,7 @@ export const el = {
   insertCommandButton: document.querySelector("#insert-command-button"),
   cdCommandButton: document.querySelector("#cd-command-button"),
   sessionBrowserButton: document.querySelector("#session-browser-button"),
+  controlCenterButton: document.querySelector("#control-center-button"),
   steerButton: document.querySelector("#steer-button"),
   imageInput: document.querySelector("#image-input"),
   attachmentStrip: document.querySelector("#attachment-strip"),
@@ -105,6 +107,25 @@ export const el = {
   sheetTitle: document.querySelector("#sheet-title"),
   sheetContent: document.querySelector("#sheet-content"),
   sheetCloseButton: document.querySelector("#sheet-close-button"),
+  
+  // Control Center
+  controlCenter: document.querySelector("#control-center"),
+  controlCenterBackdrop: document.querySelector("#control-center-backdrop"),
+  controlCenterCloseButton: document.querySelector("#control-center-close-button"),
+  controlCenterTitle: document.querySelector("#control-center-title"),
+  ccModelValue: document.querySelector("#cc-model-value"),
+  ccThinkingValue: document.querySelector("#cc-thinking-value"),
+  ccNewSession: document.querySelector("#cc-new-session"),
+  ccCompact: document.querySelector("#cc-compact"),
+  ccReload: document.querySelector("#cc-reload"),
+  ccRefresh: document.querySelector("#cc-refresh"),
+  ccModel: document.querySelector("#cc-model"),
+  ccThinking: document.querySelector("#cc-thinking"),
+  ccSessions: document.querySelector("#cc-sessions"),
+  ccTree: document.querySelector("#cc-tree"),
+  ccStats: document.querySelector("#cc-stats"),
+  ccCost: document.querySelector("#cc-cost"),
+  ccAbort: document.querySelector("#cc-abort"),
   
   // Toast notifications
   toastHost: document.querySelector("#toast-host"),

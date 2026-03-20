@@ -301,9 +301,22 @@ function updateComposerState() {
 export function renderHeader() {
   const connected = state.socket?.readyState === WebSocket.OPEN;
   
-  // Update connection pill
-  el.connectionPill.textContent = connected ? "Connected" : "Offline";
-  el.connectionPill.className = `status-pill ${connected ? "connected" : "offline"}`;
+  // Update connection dot (new minimalist design)
+  if (el.connectionDot) {
+    el.connectionDot.className = `connection-dot ${connected ? "connected" : "offline"}`;
+    const streaming = Boolean(state.status?.isStreaming || state.snapshotState?.isStreaming);
+    if (streaming) {
+      el.connectionDot.classList.add("streaming");
+    } else {
+      el.connectionDot.classList.remove("streaming");
+    }
+  }
+  
+  // Update legacy connection pill (keep for compatibility)
+  if (el.connectionPill) {
+    el.connectionPill.textContent = connected ? "Connected" : "Offline";
+    el.connectionPill.className = `status-pill ${connected ? "connected" : "offline"}`;
+  }
   
   // Update streaming indicator
   const streaming = Boolean(state.status?.isStreaming || state.snapshotState?.isStreaming);
@@ -326,6 +339,9 @@ export function renderHeader() {
   el.thinkingValue.textContent = snapshot.thinkingLevel || "—";
   el.streamingValue.textContent = streaming ? "Streaming" : "Idle";
   el.serverValue.textContent = status.port ? `${status.host || "127.0.0.1"}:${status.port}` : "—";
+  
+  // Update control center values if open
+  updateControlCenterValues();
   
   updateComposerState();
   renderQuota();
@@ -501,4 +517,172 @@ export function isMobileDevice() {
 
 export function isTouchDevice() {
   return "ontouchstart" in window || navigator.maxTouchPoints > 0;
+}
+
+// ==========================================================================
+// Control Center
+// ==========================================================================
+
+export function openControlCenter() {
+  if (!el.controlCenter) return;
+  
+  // Update model and thinking values
+  if (el.ccModelValue && state.snapshotState?.model) {
+    el.ccModelValue.textContent = state.snapshotState.model.name || state.snapshotState.model.id || "Default";
+  }
+  if (el.ccThinkingValue && state.snapshotState?.thinkingLevel) {
+    el.ccThinkingValue.textContent = state.snapshotState.thinkingLevel;
+  }
+  
+  el.controlCenter.classList.remove("hidden");
+  document.body.style.overflow = "hidden"; // Prevent background scrolling
+  
+  // Haptic feedback
+  triggerHapticFeedback([20]);
+  
+  // Focus management
+  setTimeout(() => {
+    el.controlCenterCloseButton?.focus();
+  }, 100);
+}
+
+export function closeControlCenter() {
+  if (!el.controlCenter) return;
+  
+  el.controlCenter.classList.add("hidden");
+  document.body.style.overflow = "";
+  
+  // Haptic feedback
+  triggerHapticFeedback([10]);
+}
+
+export function setupControlCenter() {
+  if (!el.controlCenter) return;
+  
+  // Close button
+  el.controlCenterCloseButton?.addEventListener("click", closeControlCenter);
+  
+  // Backdrop click
+  el.controlCenterBackdrop?.addEventListener("click", closeControlCenter);
+  
+  // Escape key
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !el.controlCenter.classList.contains("hidden")) {
+      closeControlCenter();
+    }
+  });
+  
+  // Swipe down to close (touch)
+  let touchStartY = 0;
+  const content = el.controlCenter.querySelector(".control-center-content");
+  
+  content?.addEventListener("touchstart", (e) => {
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+  
+  content?.addEventListener("touchmove", (e) => {
+    const touchY = e.touches[0].clientY;
+    const scrollTop = content.scrollTop;
+    
+    // Only swipe to close if at top of scroll
+    if (scrollTop === 0 && touchY > touchStartY + 50) {
+      closeControlCenter();
+    }
+  }, { passive: true });
+  
+  // Control card actions
+  el.ccNewSession?.addEventListener("click", () => {
+    handleControlCenterAction("new");
+    closeControlCenter();
+  });
+  
+  el.ccCompact?.addEventListener("click", () => {
+    handleControlCenterAction("compact");
+    closeControlCenter();
+  });
+  
+  el.ccReload?.addEventListener("click", () => {
+    handleControlCenterAction("reload");
+    closeControlCenter();
+  });
+  
+  el.ccRefresh?.addEventListener("click", () => {
+    handleControlCenterAction("refresh");
+    closeControlCenter();
+  });
+  
+  el.ccModel?.addEventListener("click", () => {
+    handleControlCenterAction("model");
+    closeControlCenter();
+  });
+  
+  el.ccThinking?.addEventListener("click", () => {
+    handleControlCenterAction("thinking");
+    closeControlCenter();
+  });
+  
+  el.ccSessions?.addEventListener("click", () => {
+    handleControlCenterAction("sessions");
+    closeControlCenter();
+  });
+  
+  el.ccTree?.addEventListener("click", () => {
+    handleControlCenterAction("tree");
+    closeControlCenter();
+  });
+  
+  el.ccStats?.addEventListener("click", () => {
+    handleControlCenterAction("stats");
+    closeControlCenter();
+  });
+  
+  el.ccCost?.addEventListener("click", () => {
+    handleControlCenterAction("cost");
+    closeControlCenter();
+  });
+  
+  el.ccAbort?.addEventListener("click", () => {
+    handleControlCenterAction("abort");
+    closeControlCenter();
+  });
+}
+
+function handleControlCenterAction(action) {
+  // Trigger haptic feedback
+  triggerHapticFeedback([15]);
+  
+  // Dispatch custom event for the action
+  const event = new CustomEvent("control-center-action", {
+    detail: { action },
+    bubbles: true,
+  });
+  document.dispatchEvent(event);
+  
+  // Show toast confirmation
+  const actionNames = {
+    new: "Starting new session…",
+    compact: "Compacting session…",
+    reload: "Reloading extensions…",
+    refresh: "Refreshing state…",
+    model: "Opening model picker…",
+    thinking: "Opening thinking levels…",
+    sessions: "Opening sessions browser…",
+    tree: "Opening session tree…",
+    stats: "Opening stats…",
+    cost: "Opening cost breakdown…",
+    abort: "Aborting operation…",
+  };
+  
+  showToast(actionNames[action] || `Executing ${action}…`, "info");
+}
+
+export function updateControlCenterValues() {
+  if (!el.controlCenter || el.controlCenter.classList.contains("hidden")) return;
+  
+  if (el.ccModelValue && state.snapshotState?.model) {
+    el.ccModelValue.textContent = state.snapshotState.model.name || state.snapshotState.model.id || "Default";
+  }
+  if (el.ccThinkingValue && state.snapshotState?.thinkingLevel) {
+    el.ccThinkingValue.textContent = state.snapshotState.thinkingLevel;
+  }
 }

@@ -481,48 +481,86 @@ select {
 }
 
 /* ==========================================================================
-   Topbar
+   Topbar (Minimalist)
    ========================================================================== */
 
 .topbar {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
   padding-top: 3.5rem;
-}
-
-.topbar-content {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 1rem;
 }
 
 .brand {
   display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
-.brand-icon {
-  font-size: 2rem;
-  line-height: 1;
-  animation: float 3s ease-in-out infinite;
+.brand h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+  letter-spacing: -0.02em;
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
+.brand .eyebrow {
+  margin: 0;
+  opacity: 0.8;
 }
 
 .status-indicators {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
+  padding-top: 0.25rem;
 }
 
 /* ==========================================================================
-   Status Pills
+   Status Indicators
    ========================================================================== */
 
+/* Connection Dot (Minimalist) */
+.connection-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--text-tertiary);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.connection-dot.connected {
+  background: var(--success);
+  box-shadow: 0 0 12px rgba(124, 224, 170, 0.6);
+}
+
+.connection-dot.offline {
+  background: var(--danger);
+  box-shadow: 0 0 12px rgba(255, 141, 141, 0.4);
+}
+
+.connection-dot.streaming {
+  animation: connectionPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes connectionPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+}
+
+/* Legacy Status Pills */
 .status-pill {
   border-radius: var(--radius-full);
   border: 1px solid var(--border-strong);
@@ -572,7 +610,86 @@ select {
 }
 
 /* ==========================================================================
-   Status Card
+   Status Module (Minimalist Design)
+   ========================================================================== */
+
+.status-module {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 24px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: all var(--transition-base);
+}
+
+.status-module-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .status-module-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.status-module-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border-radius: 16px;
+  transition: all var(--transition-fast);
+}
+
+.status-module-item:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.status-module-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+  opacity: 0.9;
+}
+
+.status-module-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.status-module-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+  font-weight: 600;
+}
+
+.status-module-value {
+  font-size: 0.8rem;
+  color: var(--text-primary);
+  word-break: break-word;
+  line-height: 1.3;
+  font-weight: 500;
+}
+
+/* Light Theme Adjustments */
+:root[data-theme="light"] .status-module {
+  background: rgba(255, 255, 255, 0.5);
+  border-color: rgba(0, 0, 0, 0.06);
+}
+
+:root[data-theme="light"] .status-module-item:hover {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+/* ==========================================================================
+   Status Card (Legacy - Keep for backward compatibility)
    ========================================================================== */
 
 .status-card {
@@ -1039,6 +1156,26 @@ select {
   font-size: 0.85rem;
   padding: 0.55rem 0.75rem;
   border-radius: var(--radius-md);
+  background: var(--bg-elevated-solid);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+
+.action-chip:hover {
+  background: var(--panel-2);
+  color: var(--text-primary);
+}
+
+.primary-chip {
+  background: var(--accent-gradient);
+  color: var(--text-inverse);
+  border: none;
+  font-weight: 600;
+}
+
+.primary-chip:hover {
+  box-shadow: var(--shadow-glow);
+  transform: scale(1.02);
 }
 
 /* ==========================================================================
@@ -1331,7 +1468,437 @@ select {
 }
 
 /* ==========================================================================
-   Sheet Modal (Control Center)
+   Control Center (Jony Ive Design Philosophy)
+   ========================================================================== */
+
+/* Control Center Container */
+.control-center {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.control-center.hidden {
+  display: none;
+}
+
+/* Backdrop with Blur */
+.control-center-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  animation: backdropFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.control-center.hidden .control-center-backdrop {
+  animation: backdropFadeOut 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes backdropFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes backdropFadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* Control Center Sheet */
+.control-center-sheet {
+  position: relative;
+  width: 100%;
+  max-width: 720px;
+  max-height: 85vh;
+  margin: 0;
+  background: var(--bg-elevated);
+  backdrop-filter: blur(40px) saturate(200%);
+  -webkit-backdrop-filter: blur(40px) saturate(200%);
+  border-top-left-radius: 28px;
+  border-top-right-radius: 28px;
+  box-shadow: 
+    0 -8px 32px rgba(0, 0, 0, 0.12),
+    0 -2px 8px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  animation: sheetSlideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.control-center.hidden .control-center-sheet {
+  animation: sheetSlideDown 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes sheetSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes sheetSlideDown {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+}
+
+/* Drag Handle */
+.control-center-header {
+  padding: 1.25rem 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.03) 0%,
+    transparent 100%
+  );
+  flex-shrink: 0;
+}
+
+.control-center-drag-handle {
+  width: 40px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+  cursor: grab;
+  transition: all 0.2s;
+}
+
+.control-center-drag-handle:hover {
+  background: rgba(255, 255, 255, 0.5);
+  transform: scale(1.05);
+}
+
+.control-center-drag-handle:active {
+  cursor: grabbing;
+}
+
+.control-center-header > div {
+  text-align: center;
+}
+
+.control-center-header h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.control-center-close-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.control-center-close-button:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--text-primary);
+  transform: scale(1.05);
+}
+
+/* Control Center Content */
+.control-center-content {
+  padding: 1.5rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: grid;
+  gap: 1.5rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Control Sections */
+.control-section {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.control-section-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+  margin: 0;
+  padding-left: 0.25rem;
+}
+
+/* Control Grids */
+.control-grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.control-grid-2x2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.control-grid-1x2 {
+  grid-template-columns: 1fr;
+}
+
+.control-grid-1x1 {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 480px) {
+  .control-grid-2x2 {
+    gap: 0.85rem;
+  }
+}
+
+/* Control Cards */
+.control-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: left;
+  overflow: hidden;
+}
+
+.control-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.03) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.25s;
+  pointer-events: none;
+}
+
+.control-card:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: scale(1.02);
+  box-shadow: 
+    0 8px 24px rgba(0, 0, 0, 0.12),
+    0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.control-card:hover::before {
+  opacity: 1;
+}
+
+.control-card:active {
+  transform: scale(0.98);
+}
+
+/* Control Card 2x2 Layout */
+.control-grid-2x2 .control-card {
+  min-height: 110px;
+  justify-content: space-between;
+}
+
+/* Control Card Wide Layout */
+.control-card-wide {
+  flex-direction: row;
+  align-items: center;
+  min-height: 72px;
+}
+
+.control-grid-2x2 .control-card-wide {
+  grid-column: span 2;
+}
+
+/* Control Card Icon */
+.control-card-icon {
+  font-size: 1.75rem;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.control-card:hover .control-card-icon {
+  transform: scale(1.1);
+}
+
+.control-grid-2x2 .control-card-icon {
+  font-size: 1.5rem;
+}
+
+/* Control Card Content */
+.control-card-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.15rem;
+}
+
+.control-card-desc {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  line-height: 1.4;
+}
+
+.control-card-value {
+  font-size: 0.8rem;
+  color: var(--accent-primary);
+  font-weight: 500;
+}
+
+.control-card-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.control-card-chevron {
+  font-size: 1.5rem;
+  color: var(--text-tertiary);
+  line-height: 1;
+  margin-left: 0.5rem;
+  transition: transform 0.2s;
+}
+
+.control-card:hover .control-card-chevron {
+  color: var(--text-secondary);
+  transform: translateX(3px);
+}
+
+/* Danger Zone */
+.danger-section .control-card-danger {
+  background: rgba(255, 141, 141, 0.08);
+  border-color: rgba(255, 141, 141, 0.2);
+}
+
+.danger-section .control-card-danger:hover {
+  background: rgba(255, 141, 141, 0.12);
+  border-color: rgba(255, 141, 141, 0.3);
+  box-shadow: 
+    0 8px 24px rgba(255, 141, 141, 0.15),
+    0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.danger-section .control-section-title {
+  color: rgba(255, 141, 141, 0.6);
+}
+
+/* Light Theme Adjustments */
+:root[data-theme="light"] .control-center-sheet {
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 
+    0 -8px 32px rgba(0, 0, 0, 0.08),
+    0 -2px 8px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+:root[data-theme="light"] .control-center-header {
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.02) 0%,
+    transparent 100%
+  );
+  border-bottom-color: rgba(0, 0, 0, 0.06);
+}
+
+:root[data-theme="light"] .control-center-drag-handle {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+:root[data-theme="light"] .control-card {
+  background: rgba(255, 255, 255, 0.6);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+:root[data-theme="light"] .control-card::before {
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.04) 0%,
+    transparent 50%,
+    rgba(0, 0, 0, 0.02) 100%
+  );
+}
+
+:root[data-theme="light"] .control-card:hover {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+:root[data-theme="light"] .danger-section .control-card-danger {
+  background: rgba(255, 141, 141, 0.1);
+  border-color: rgba(255, 141, 141, 0.25);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 480px) {
+  .control-center-content {
+    padding: 1.25rem;
+    gap: 1.25rem;
+  }
+  
+  .control-grid-2x2 .control-card {
+    min-height: 100px;
+    padding: 0.9rem;
+  }
+  
+  .control-card-icon {
+    font-size: 1.5rem;
+  }
+  
+  .control-grid-2x2 .control-card-icon {
+    font-size: 1.35rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .control-center {
+    align-items: center;
+    padding: 1rem;
+  }
+  
+  .control-center-sheet {
+    max-height: 80vh;
+    border-radius: 28px;
+    box-shadow: 
+      0 -8px 32px rgba(0, 0, 0, 0.12),
+      0 8px 32px rgba(0, 0, 0, 0.12),
+      0 2px 8px rgba(0, 0, 0, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* ==========================================================================
+   Sheet Modal (Legacy - Keep for backward compatibility)
    ========================================================================== */
 
 .sheet-card {
