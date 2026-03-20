@@ -10,6 +10,7 @@ import {
 } from "./messages.js";
 import { closeSheet } from "./sheet-navigation.js";
 import { renderSheet } from "./sheets-view.js";
+import { renderSessionsView } from "./sessions-view.js";
 import { state } from "./state.js";
 import { refreshAll, refreshQuota, sendRpc } from "./transport.js";
 import {
@@ -342,6 +343,7 @@ export async function handleEnvelope(event) {
     renderHeader();
     renderSheet();
     renderChatEmptyState();
+    renderSessionsView();
     return;
   }
 
