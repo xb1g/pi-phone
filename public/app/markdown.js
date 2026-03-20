@@ -9,6 +9,12 @@ function findInlineCodeMarker(text, startIndex = 0) {
   return -1;
 }
 
+function renderLinks(text = "") {
+  // Match [text](url) pattern
+  const linkPattern = /\[([^\]]+)\]\(([^)]+)\)/g;
+  return text.replace(linkPattern, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+}
+
 function renderStrongText(text = "") {
   let html = "";
   let cursor = 0;
@@ -41,17 +47,17 @@ function renderInlineMarkdown(text = "") {
   while (cursor < text.length) {
     const open = findInlineCodeMarker(text, cursor);
     if (open === -1) {
-      html += renderStrongText(text.slice(cursor));
+      html += renderLinks(renderStrongText(text.slice(cursor)));
       break;
     }
 
     const close = findInlineCodeMarker(text, open + 1);
     if (close === -1) {
-      html += renderStrongText(text.slice(cursor));
+      html += renderLinks(renderStrongText(text.slice(cursor)));
       break;
     }
 
-    html += renderStrongText(text.slice(cursor, open));
+    html += renderLinks(renderStrongText(text.slice(cursor, open)));
     html += `<code>${escapeHtml(text.slice(open + 1, close))}</code>`;
     cursor = close + 1;
   }
@@ -59,10 +65,85 @@ function renderInlineMarkdown(text = "") {
   return html;
 }
 
+function renderHeading(line = "") {
+  const match = line.match(/^(#{1,6})\s+(.+)$/);
+  if (!match) return null;
+  const level = match[1].length;
+  const content = renderInlineMarkdown(match[2]);
+  return `<h${level}>${content}</h${level}>`;
+}
+
+function renderListItem(line = "") {
+  const match = line.match(/^[\s]*[-*+]\s+(.+)$/);
+  if (!match) return null;
+  return `<li>${renderInlineMarkdown(match[1])}</li>`;
+}
+
+function renderOrderedListItem(line = "") {
+  const match = line.match(/^[\s]*\d+\.\s+(.+)$/);
+  if (!match) return null;
+  return `<li>${renderInlineMarkdown(match[1])}</li>`;
+}
+
+function renderBlockquote(line = "") {
+  const match = line.match(/^>\s?(.+)$/);
+  if (!match) return null;
+  return `<blockquote>${renderInlineMarkdown(match[1])}</blockquote>`;
+}
+
+function renderTableRow(line = "", isHeader = false) {
+  const cells = line.split("|").map(c => c.trim()).filter(c => c);
+  if (cells.length === 0) return null;
+  const tag = isHeader ? "th" : "td";
+  const content = cells.map(c => `<${tag}>${renderInlineMarkdown(c)}</${tag}>`).join("");
+  return `<tr>${content}</tr>`;
+}
+
+function isTableSeparator(line = "") {
+  return /^\s*\|?\s*:?-+:?(?:\s*\|\s*:?-+:?)*/.test(line);
+}
+
+function processBlock(block = "") {
+  const lines = block.split("\n").filter(l => l.trim());
+  if (lines.length === 0) return "";
+
+  // Check for heading
+  const heading = renderHeading(lines[0]);
+  if (heading) return heading;
+
+  // Check for blockquote
+  if (lines[0].startsWith(">")) {
+    return lines.map(l => renderBlockquote(l) || `<p>${renderInlineMarkdown(l)}</p>`).join("");
+  }
+
+  // Check for unordered list
+  if (lines.every(l => /^[\s]*[-*+]\s+/.test(l))) {
+    const items = lines.map(renderListItem).filter(Boolean).join("");
+    return `<ul>${items}</ul>`;
+  }
+
+  // Check for ordered list
+  if (lines.every(l => /^[\s]*\d+\.\s+/.test(l))) {
+    const items = lines.map(renderOrderedListItem).filter(Boolean).join("");
+    return `<ol>${items}</ol>`;
+  }
+
+  // Check for table
+  if (lines.length >= 2 && lines[0].includes("|") && isTableSeparator(lines[1])) {
+    const headerRow = renderTableRow(lines[0], true);
+    const bodyRows = lines.slice(2).map(l => renderTableRow(l, false)).filter(Boolean).join("");
+    return `<table>${headerRow}${bodyRows}</table>`;
+  }
+
+  // Default: paragraph
+  return `<p>${renderInlineMarkdown(block)}</p>`;
+}
+
 function renderTextBlocks(text = "") {
+  // Split by double newlines, but preserve single newlines within blocks
   const blocks = text
     .split(/\n{2,}/)
-    .map((block) => (block.trim() ? `<p>${renderInlineMarkdown(block)}</p>` : ""))
+    .map((block) => block.trim() ? processBlock(block) : "")
     .filter(Boolean);
 
   if (blocks.length) return blocks.join("");

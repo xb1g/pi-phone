@@ -171,6 +171,7 @@ export function transformMessage(message, index) {
       meta: formatTimestamp(message.timestamp),
       details: message.details,
       imageCount: countImages(message.content),
+      markdown: true,
     }];
   }
 
@@ -182,6 +183,7 @@ export function transformMessage(message, index) {
       text: message.summary || "",
       meta: formatTimestamp(message.timestamp),
       details: { fromId: message.fromId },
+      markdown: true,
     }];
   }
 
@@ -192,6 +194,7 @@ export function transformMessage(message, index) {
       title: `Compaction summary${message.tokensBefore ? ` · ${message.tokensBefore.toLocaleString()} tokens` : ""}`,
       text: message.summary || "",
       meta: formatTimestamp(message.timestamp),
+      markdown: true,
     }];
   }
 
