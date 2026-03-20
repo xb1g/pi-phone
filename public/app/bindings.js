@@ -45,19 +45,19 @@ export function initializeBindings({ handleEnvelope, handleAuthFailure }) {
   window.addEventListener("resize", scheduleComposerLayoutSync, { passive: true });
   window.visualViewport?.addEventListener("resize", scheduleComposerLayoutSync, { passive: true });
 
-  el.refreshButton.addEventListener("click", refreshAll);
-  el.abortButton.addEventListener("click", () => sendRpc({ type: "abort" }));
+  el.refreshButton?.addEventListener("click", refreshAll);
+  el.abortButton?.addEventListener("click", () => sendRpc({ type: "abort" }));
   el.stopButton?.addEventListener("click", () => sendRpc({ type: "abort" }));
-  el.actionsButton.addEventListener("click", () => openSheet("actions"));
-  el.insertCommandButton.addEventListener("click", () => openSheet("commands"));
+  el.actionsButton?.addEventListener("click", () => openSheet("actions"));
+  el.insertCommandButton?.addEventListener("click", () => openSheet("commands"));
   el.cdCommandButton?.addEventListener("click", () => {
     insertCdCommand();
     renderCommandSuggestions();
   });
-  el.sessionBrowserButton.addEventListener("click", () => openSheet("sessions"));
-  el.sessionSidebarButton.addEventListener("click", () => openSheet("active-sessions"));
-  el.treeBrowserButton.addEventListener("click", () => openSheet("tree"));
-  el.steerButton.addEventListener("click", () => submitPrompt({ steer: true }));
+  el.sessionBrowserButton?.addEventListener("click", () => openSheet("sessions"));
+  el.sessionSidebarButton?.addEventListener("click", () => openSheet("active-sessions"));
+  el.treeBrowserButton?.addEventListener("click", () => openSheet("tree"));
+  el.steerButton?.addEventListener("click", () => submitPrompt({ steer: true }));
   el.sendButton.addEventListener("click", () => submitPrompt());
   el.sheetCloseButton.addEventListener("click", closeSheet);
   el.attachImageButton.addEventListener("click", () => el.imageInput.click());
