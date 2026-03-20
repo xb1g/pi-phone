@@ -2257,3 +2257,73 @@ select {
     --text-secondary: #ffffff;
   }
 }
+
+/* ==========================================================================
+   Bottom Tab Bar
+   ========================================================================== */
+
+/* ─── Bottom Tab Bar ───────────────────────────────────── */
+.bottom-tab-bar {
+  display: flex;
+  align-items: stretch;
+  background: var(--bg-surface, #1a1a1a);
+  border-top: 1px solid var(--border-color, #333);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  flex-shrink: 0;
+  z-index: 100;
+}
+
+.tab-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-height: 56px;
+  padding: 8px 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted, #888);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: color 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tab-btn:active { opacity: 0.7; }
+
+.tab-btn--active,
+.tab-btn--active svg {
+  color: var(--accent, #8abeb7);
+  stroke: var(--accent, #8abeb7);
+}
+
+/* ─── Tab Panels ───────────────────────────────────────── */
+.tab-panel {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+#sessions-view {
+  padding: 16px;
+  background: var(--bg-base, #111);
+}
+
+/* Ensure .app-shell lays out correctly */
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+#messages {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}

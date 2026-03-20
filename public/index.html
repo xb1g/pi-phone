@@ -88,6 +88,13 @@
       <!-- Messages Container -->
       <main id="messages" class="messages" aria-live="polite" aria-label="Chat messages"></main>
 
+      <!-- Sessions View Panel -->
+      <div id="sessions-view" class="tab-panel" hidden>
+        <div id="sessions-list" class="sessions-list">
+          <!-- Rendered by sessions-view.js -->
+        </div>
+      </div>
+
       <!-- Enhanced Composer -->
       <section class="composer-wrap">
         <div class="composer">
@@ -171,6 +178,30 @@
           </div>
         </div>
       </section>
+
+      <!-- Bottom Tab Bar -->
+      <nav class="bottom-tab-bar" aria-label="Main navigation">
+        <button class="tab-btn tab-btn--active" data-tab="chat" aria-label="Chat" aria-current="page">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          <span>Chat</span>
+        </button>
+        <button class="tab-btn" data-tab="sessions" aria-label="Sessions" aria-current="false">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+            <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+          </svg>
+          <span>Sessions</span>
+        </button>
+        <button class="tab-btn" data-tab="menu" aria-label="Menu" aria-current="false">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+          <span>Menu</span>
+        </button>
+      </nav>
     </div>
 
     <!-- Login Modal -->
