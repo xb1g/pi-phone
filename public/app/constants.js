@@ -1,3 +1,4 @@
+// Theme and UI Constants
 export const THINKING_LEVELS = ["off", "minimal", "low", "medium", "high", "xhigh"];
 
 export const LOCAL_COMMAND_DEFINITIONS = [
@@ -19,6 +20,7 @@ export const LOCAL_COMMAND_NAMES = new Set(LOCAL_COMMAND_DEFINITIONS.map((comman
 export const COMMAND_CATEGORY_ORDER = ["local", "extension", "prompt", "skill"];
 export const AUTOCOMPLETE_DELIMITERS = new Set([" ", "\t", "\n", '"', "'", "="]);
 export const TOKEN_STORAGE_KEY = "pi-phone-token";
+export const THEME_STORAGE_KEY = "pi-phone-theme";
 
 export const THEME_CSS_VARIABLES = {
   mdCode: "--md-code",
@@ -58,3 +60,25 @@ export const TOOL_LANGUAGE_LABELS = {
   yml: "YAML",
   zsh: "Shell",
 };
+
+// UI Enhancement Constants
+export const UI_VERSION = "20260320-1";
+export const ANIMATION_DURATION = {
+  fast: 150,
+  base: 250,
+  slow: 350,
+};
+
+export const TOAST_DURATION = 3500;
+export const DEBOUNCE_DELAY = 300;
+export const THROTTLE_DELAY = 100;
+
+// Mobile UX Constants
+export const TOUCH_TARGET_MIN_SIZE = 44; // Minimum touch target size in pixels
+export const SWIPE_THRESHOLD = 50; // Minimum swipe distance in pixels
+export const LONG_PRESS_DURATION = 500; // Long press duration in milliseconds
+
+// Accessibility
+export const FOCUS_VISIBLE_CLASS = "focus-visible";
+export const LIVE_REGION_POLITE = "polite";
+export const LIVE_REGION_ASSERTIVE = "assertive";

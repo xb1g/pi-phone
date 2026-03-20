@@ -4,6 +4,21 @@ A phone-first remote UI for [Pi](https://pi.dev) that lets you drive a real Pi s
 
 `pi-phone` starts a small local web server, launches a dedicated `pi --mode rpc` subprocess in your current project, and mirrors Pi's session state over WebSocket to a mobile web app.
 
+## ✨ What's New (v0.0.9+)
+
+**Major UI Overhaul** - Complete mobile-first redesign with:
+
+- 🌓 **Dark/Light Theme Toggle** - Automatic system theme detection with manual override
+- 🎨 **Modern Design** - Refined color palette, smooth animations, gradient backgrounds
+- 📱 **Enhanced Mobile UX** - Better touch targets, haptic feedback, safe area support
+- ♿ **Full Accessibility** - WCAG 2.1 AA compliant, screen reader support, keyboard navigation
+- 🚀 **PWA Features** - Offline support, app shortcuts, share target, install prompts
+- ⚡ **Performance** - Hardware-accelerated animations, optimized rendering
+- 🔔 **Toast Notifications** - Auto-dismissing messages with haptic feedback
+- 📊 **Enhanced Status** - Better connection indicators, streaming status, quota display
+
+See [UI_IMPROVEMENTS.md](./UI_IMPROVEMENTS.md) for complete details.
+
 ## What it gives you
 
 - Phone-friendly chat UI for Pi
@@ -172,18 +187,34 @@ Shows the current token, or tells you that token auth is disabled for the curren
 
 The phone UI is built around Pi RPC plus a few local convenience actions. Depending on your current Pi setup, you can:
 
-- send prompts
-- attach images
-- abort streaming
-- compact the current session
-- start a new session
-- reload extensions, skills, prompts, and themes
-- browse and switch models
-- browse and switch thinking levels
-- browse prompt templates, skills, and extension commands exposed through Pi RPC
-- browse saved sessions
-- browse the current session tree and open a branch path as a new active session
-- view session stats and cost stats
+- Send prompts and messages
+- Attach images from your phone
+- Abort streaming responses
+- Compact the current session
+- Start a new session
+- Reload extensions, skills, prompts, and themes
+- Browse and switch models
+- Browse and switch thinking levels
+- Browse prompt templates, skills, and extension commands exposed through Pi RPC
+- Browse saved sessions
+- Browse the current session tree and open a branch path as a new active session
+- View session stats and cost stats
+- **Toggle dark/light theme** (button in top-right or Alt+T)
+- **Receive toast notifications** with haptic feedback
+- **Install as PWA** for native app experience
+- **Use offline** with cached assets
+- **Share content** to Pi Phone (share target)
+
+### New UI Features
+
+- **Theme System**: Dark and light themes with automatic system detection
+- **Enhanced Status Card**: Grid layout with icons and hover effects
+- **Modern Composer**: Icon-based buttons, horizontal scrolling actions
+- **Better Messages**: Gradient backgrounds, smooth animations, improved code blocks
+- **Connection Status**: Visual indicators with pulse animation for streaming
+- **Quota Display**: Color-coded context usage and token quota
+- **Toast Notifications**: Auto-dismissing messages for feedback
+- **Loading States**: Overlay with spinner for async operations
 
 Because the extension drives a real Pi subprocess, the phone UI preserves much more of your actual Pi environment than a custom standalone web app would.
 

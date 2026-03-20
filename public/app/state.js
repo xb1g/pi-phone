@@ -38,52 +38,77 @@ export const state = {
 };
 
 export const el = {
-  abortButton: document.querySelector("#abort-button"),
-  actionsButton: document.querySelector("#actions-button"),
-  attachImageButton: document.querySelector("#attach-image-button"),
-  cdCommandButton: document.querySelector("#cd-command-button"),
-  attachmentStrip: document.querySelector("#attachment-strip"),
-  banner: document.querySelector("#banner"),
-  commandStrip: document.querySelector("#command-strip"),
-  composerWrap: document.querySelector(".composer-wrap"),
+  // Theme toggle
+  themeToggleButton: document.querySelector("#theme-toggle-button"),
+  
+  // Sidebar
+  sessionSidebarButton: document.querySelector("#session-sidebar-button"),
+  
+  // Status and header
   connectionPill: document.querySelector("#connection-pill"),
+  streamingPill: document.querySelector("#streaming-pill"),
   cwdValue: document.querySelector("#cwd-value"),
-  imageInput: document.querySelector("#image-input"),
-  insertCommandButton: document.querySelector("#insert-command-button"),
-  loginModal: document.querySelector("#login-modal"),
-  messages: document.querySelector("#messages"),
+  sessionValue: document.querySelector("#session-value"),
   modelValue: document.querySelector("#model-value"),
-  promptInput: document.querySelector("#prompt-input"),
-  quotaContext: document.querySelector("#quota-context"),
-  quotaCwd: document.querySelector("#quota-cwd"),
-  quotaMetaRow: document.querySelector("#quota-meta-row"),
-  quotaPillsRow: document.querySelector("#quota-pills-row"),
-  quotaPrimary: document.querySelector("#quota-primary"),
-  quotaRow: document.querySelector("#quota-row"),
-  quotaSecondary: document.querySelector("#quota-secondary"),
+  thinkingValue: document.querySelector("#thinking-value"),
+  streamingValue: document.querySelector("#streaming-value"),
+  serverValue: document.querySelector("#server-value"),
+  
+  // Status card actions
+  actionsButton: document.querySelector("#actions-button"),
   refreshButton: document.querySelector("#refresh-button"),
+  refreshStatusButton: document.querySelector("#refresh-status-button"),
+  treeBrowserButton: document.querySelector("#tree-browser-button"),
+  abortButton: document.querySelector("#abort-button"),
+  
+  // Banner and widgets
+  banner: document.querySelector("#banner"),
+  widgetStack: document.querySelector("#widget-stack"),
+  
+  // Messages
+  messages: document.querySelector("#messages"),
+  
+  // Composer
+  composerWrap: document.querySelector(".composer-wrap"),
+  promptInput: document.querySelector("#prompt-input"),
   sendButton: document.querySelector("#send-button"),
   stopButton: document.querySelector("#stop-button"),
-  serverValue: document.querySelector("#server-value"),
+  attachImageButton: document.querySelector("#attach-image-button"),
+  insertCommandButton: document.querySelector("#insert-command-button"),
+  cdCommandButton: document.querySelector("#cd-command-button"),
   sessionBrowserButton: document.querySelector("#session-browser-button"),
-  sessionSidebarButton: document.querySelector("#session-sidebar-button"),
-  sessionValue: document.querySelector("#session-value"),
-  sheetCloseButton: document.querySelector("#sheet-close-button"),
-  sheetContent: document.querySelector("#sheet-content"),
-  sheetModal: document.querySelector("#sheet-modal"),
-  sheetTitle: document.querySelector("#sheet-title"),
   steerButton: document.querySelector("#steer-button"),
-  streamingValue: document.querySelector("#streaming-value"),
-  thinkingValue: document.querySelector("#thinking-value"),
-  toastHost: document.querySelector("#toast-host"),
+  imageInput: document.querySelector("#image-input"),
+  attachmentStrip: document.querySelector("#attachment-strip"),
+  commandStrip: document.querySelector("#command-strip"),
+  
+  // Quota display
+  quotaRow: document.querySelector("#quota-row"),
+  quotaMetaRow: document.querySelector("#quota-meta-row"),
+  quotaPillsRow: document.querySelector("#quota-pills-row"),
+  quotaCwd: document.querySelector("#quota-cwd"),
+  quotaContext: document.querySelector("#quota-context"),
+  quotaPrimary: document.querySelector("#quota-primary"),
+  quotaSecondary: document.querySelector("#quota-secondary"),
+  
+  // Modals
+  loginModal: document.querySelector("#login-modal"),
   tokenInput: document.querySelector("#token-input"),
   tokenSaveButton: document.querySelector("#token-save-button"),
-  treeBrowserButton: document.querySelector("#tree-browser-button"),
   uiModal: document.querySelector("#ui-modal"),
-  uiModalButtons: document.querySelector("#ui-modal-buttons"),
-  uiModalInput: document.querySelector("#ui-modal-input"),
+  uiModalTitle: document.querySelector("#ui-modal-title"),
   uiModalMessage: document.querySelector("#ui-modal-message"),
   uiModalOptions: document.querySelector("#ui-modal-options"),
-  uiModalTitle: document.querySelector("#ui-modal-title"),
-  widgetStack: document.querySelector("#widget-stack"),
+  uiModalInput: document.querySelector("#ui-modal-input"),
+  uiModalButtons: document.querySelector("#ui-modal-buttons"),
+  sheetModal: document.querySelector("#sheet-modal"),
+  sheetTitle: document.querySelector("#sheet-title"),
+  sheetContent: document.querySelector("#sheet-content"),
+  sheetCloseButton: document.querySelector("#sheet-close-button"),
+  
+  // Toast notifications
+  toastHost: document.querySelector("#toast-host"),
+  
+  // Loading overlay
+  loadingOverlay: document.querySelector("#loading-overlay"),
 };
