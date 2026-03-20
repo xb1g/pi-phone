@@ -78,6 +78,8 @@ Tap chip → expands inline to show full tool call input and output. Tap again t
 - **Streaming**: small pulsing dot at bottom of conversation (not full-screen overlay)
 - **Waiting for you**: composer area gets a subtle highlight + label "Pi is waiting" above the input — draws attention without being intrusive
 - **Error**: red banner at top with error message, tap to dismiss
+- **No session selected** (e.g. first load, or all sessions closed): Chat tab shows a centered empty state — "No session open" + "Go to Sessions" button that switches to the Sessions tab
+- **WebSocket reconnect mid-stream**: partial streaming message is discarded; a reconnect notice is appended inline ("↩ Reconnected"); conversation history is re-fetched from the server on reconnect
 
 ---
 
@@ -99,9 +101,9 @@ Sheet slides up from bottom, drag handle at top, backdrop tap or swipe-down to c
 
 **Sections (top to bottom):**
 
-1. **Session info** — goal (truncated), project name, status badge. Read-only context.
-2. **Session actions** — "New session", "Branch session", "Switch session" (opens Sessions list), "Stop session". Card-based layout, icon + label.
-3. **Model** — compact chip showing current model (e.g. `kimi-k2.5`). Tap to open a scrollable model picker list.
+1. **Session info** — goal (truncated), project name, status badge of the **most recently active session** (last session switched to or started). Read-only context. In a single-session setup this is always the only session.
+2. **Session actions** — "New session", "Switch session" (opens Sessions list), "Stop session". Card-based layout, icon + label. (Branch session is deferred — not in this pass.)
+3. **Model** — compact chip showing current model (e.g. `kimi-k2.5`). Tap to open a scrollable model picker list. The model list comes from the `/api/health` response (`availableModels` field — to be added alongside `sessions[]`). Selecting a model sends `{ type: "set_model", model: "<id>" }` over WebSocket.
 4. **Danger zone** — "Kill server", "Disconnect". Red-tinted background, separated by a divider. Requires a confirm tap before executing.
 
 ### Mobile constraints
@@ -116,7 +118,7 @@ Sheet slides up from bottom, drag handle at top, backdrop tap or swipe-down to c
 ### Layout
 Fixed to bottom of screen, above the bottom tab bar. Three rows:
 
-1. **Quick commands** (optional, toggleable): horizontally scrollable chip row with `/cd`, `/phone-stop`, and any registered Pi extension commands. Hidden by default when keyboard is up. Small "^" toggle to reveal.
+1. **Quick commands** (optional, toggleable): horizontally scrollable chip row with a static list of common commands: `/cd`, `/phone-stop`, `/clear`, `/model`. No dynamic discovery in this pass. Hidden by default when keyboard is up. Small "^" toggle to reveal.
 2. **Input row**: attachment button (📎) | auto-resizing text area (1–4 lines) | send/stop button
 3. *(nothing below — tab bar handles safe area)*
 
@@ -124,7 +126,7 @@ Fixed to bottom of screen, above the bottom tab bar. Three rows:
 - **Text area**: `min-height: 44px`, grows up to 4 lines then scrolls. `font-size: 16px` to prevent iOS auto-zoom.
 - **Send button**: prominent, accent color. Disabled when text is empty.
 - **Stop button**: replaces send during streaming. Square icon, red or accent color. Sends stop signal to Pi via WebSocket.
-- **Attachments**: taps native `<input type="file" accept="image/*">`. Uploaded image shown as thumbnail above text area, with remove (×) button.
+- **Attachments**: taps native `<input type="file" accept="image/*">`. Uploaded image shown as thumbnail above text area, with remove (×) button. Image is transmitted as base64 inline in the message JSON (matching the existing `attachments` flow in `state.js` — this extends rather than replaces current behavior). Max file size: 5 MB. If the selected file exceeds 5 MB or is not an image, show a toast error ("File too large — max 5 MB" / "Only images are supported") and do not add it to the attachments list.
 - **Keyboard handling**: composer anchors above keyboard using `visualViewport` resize event. Fallback: `padding-bottom` matching `env(keyboard-inset-height)`. Prevents composer from hiding behind keyboard on iOS and Android.
 
 ---
@@ -138,9 +140,13 @@ Only one backend change required:
 In `src/extension/phone-server-runtime.ts`:
 - Add `getSessionSummaries(): SessionSummary[]` method
 - Include `sessions: SessionSummary[]` in the `/api/health` JSON response
+- Include `availableModels: string[]` and `currentModel: string` in the `/api/health` response (read from Pi's model config)
+- Handle incoming WebSocket message `{ type: "set_model", model: string }` to switch the active model
 - Push `{ type: "sessions_update", sessions: SessionSummary[] }` over WebSocket on session state changes (streaming start/stop, new session, session switch)
 
-The `goal` field: read the first `user` role message from the session's JSONL file (or in-memory session state if available). Truncate to 80 chars.
+The `goal` field: read the first `user` role message from in-memory session history (preferred, already available in `PhoneServerRuntime`). If the session has no messages yet, fall back to `"No messages yet"`. Do not read from JSONL files — use only what is already in memory to avoid I/O. Truncate to 80 chars.
+
+Push `sessions_update` on: streaming start, streaming stop, new session created, session switched, session stopped, session destroyed/removed from memory, **and on error state transitions** (so the sessions list always reflects current status in real time).
 
 ---
 
@@ -162,3 +168,4 @@ The `goal` field: read the first `user` role message from the session's JSONL fi
 - Composer never hides behind the keyboard
 - All tap targets ≥ 44px
 - Control center sections are clearly separated and the danger zone requires confirmation
+- Tool call chips are collapsed by default; tapping one expands it to show full input/output; tapping again collapses it
