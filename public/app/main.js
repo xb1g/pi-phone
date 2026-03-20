@@ -1,7 +1,7 @@
 import { initializeBindings } from "./bindings.js";
 import { handleAuthFailure, handleEnvelope } from "./handlers.js";
 import { boot } from "./transport.js";
-import { initTheme, toggleTheme, triggerHapticFeedback, setupControlCenter, openControlCenter, closeControlCenter } from "./ui.js";
+import { initTheme, toggleTheme, triggerHapticFeedback, setupControlCenter, openControlCenter, closeControlCenter, initKeyboardHandling } from "./ui.js";
 import { el } from "./state.js";
 
 // Initialize theme on load
@@ -76,6 +76,21 @@ function initializeUI() {
   setupControlCenterUI();
   setupMobileOptimizations();
   setupAccessibility();
+  initKeyboardHandling();
+  setupQuickCommands();
+}
+
+// Setup quick command chips
+function setupQuickCommands() {
+  document.getElementById("quick-commands")?.addEventListener("click", (e) => {
+    const chip = e.target.closest("[data-command]");
+    if (!chip) return;
+    const input = document.getElementById("prompt-input");
+    if (!input) return;
+    input.value = chip.dataset.command;
+    input.focus();
+    input.selectionStart = input.selectionEnd = input.value.length;
+  });
 }
 
 // Mobile-specific optimizations

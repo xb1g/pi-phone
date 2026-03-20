@@ -62,6 +62,22 @@ export function initializeBindings({ handleEnvelope, handleAuthFailure }) {
   el.sheetCloseButton.addEventListener("click", closeSheet);
   el.attachImageButton.addEventListener("click", () => el.imageInput.click());
   el.imageInput.addEventListener("change", (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      showToast("Only images are supported", "error");
+      event.target.value = "";
+      return;
+    }
+
+    const MAX_BYTES = 5 * 1024 * 1024; // 5 MB
+    if (file.size > MAX_BYTES) {
+      showToast("File too large — max 5 MB", "error");
+      event.target.value = "";
+      return;
+    }
+
     addAttachments(event.target.files);
     renderCommandSuggestions();
     el.imageInput.value = "";

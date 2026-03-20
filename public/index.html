@@ -103,7 +103,15 @@
           <!-- Attachment Strip -->
           <div id="attachment-strip" class="attachment-strip hidden" aria-label="Attached files"></div>
           
-          <!-- Command Strip -->
+          <!-- Quick Commands (static chips) -->
+          <div id="quick-commands" class="quick-commands">
+            <button class="command-chip" data-command="/cd ">📁 /cd</button>
+            <button class="command-chip" data-command="/phone-stop">⏹ /phone-stop</button>
+            <button class="command-chip" data-command="/clear">🗑 /clear</button>
+            <button class="command-chip" data-command="/model ">🤖 /model</button>
+          </div>
+          
+          <!-- Command Strip (autocomplete) -->
           <section id="command-strip" class="command-strip hidden" aria-label="Quick commands"></section>
           
           <!-- Input Row -->
@@ -242,8 +250,8 @@
     <div id="control-center" class="control-center hidden" role="dialog" aria-modal="true" aria-labelledby="control-center-title">
       <div class="control-center-backdrop" id="control-center-backdrop"></div>
       <div class="control-center-sheet">
+        <div class="sheet-handle"></div>
         <div class="control-center-header">
-          <div class="control-center-drag-handle"></div>
           <div>
             <div class="eyebrow">Control Center</div>
             <h2 id="control-center-title">Session Controls</h2>
@@ -255,114 +263,52 @@
             </svg>
           </button>
         </div>
-        
-        <div class="control-center-content">
-          <!-- Session Actions Grid -->
-          <section class="control-section">
-            <h3 class="control-section-title">Session</h3>
-            <div class="control-grid control-grid-2x2">
-              <button id="cc-new-session" class="control-card">
-                <div class="control-card-icon">✨</div>
-                <div class="control-card-label">New Session</div>
-                <div class="control-card-desc">Start fresh</div>
+
+        <div class="cc-scroll">
+          <!-- Session info -->
+          <section class="cc-section cc-section--info" id="cc-session-info">
+            <div class="cc-session-goal" id="cc-goal"></div>
+            <div class="cc-session-meta">
+              <span id="cc-project"></span>
+              <span id="cc-status-badge" class="session-badge badge--idle">idle</span>
+            </div>
+          </section>
+
+          <!-- Session actions -->
+          <section class="cc-section">
+            <h3 class="cc-section-title">Session</h3>
+            <div class="cc-card-list">
+              <button class="cc-card" id="cc-new-session">
+                <span class="cc-card__icon" aria-hidden="true">＋</span>
+                <span class="cc-card__label">New session</span>
               </button>
-              <button id="cc-compact" class="control-card">
-                <div class="control-card-icon">🗜️</div>
-                <div class="control-card-label">Compact</div>
-                <div class="control-card-desc">Save tokens</div>
+              <button class="cc-card" id="cc-switch-session">
+                <span class="cc-card__icon" aria-hidden="true">⇄</span>
+                <span class="cc-card__label">Switch session</span>
               </button>
-              <button id="cc-reload" class="control-card">
-                <div class="control-card-icon">🔄</div>
-                <div class="control-card-label">Reload</div>
-                <div class="control-card-desc">Extensions & skills</div>
-              </button>
-              <button id="cc-refresh" class="control-card">
-                <div class="control-card-icon">↻</div>
-                <div class="control-card-label">Refresh</div>
-                <div class="control-card-desc">Update state</div>
+              <button class="cc-card" id="cc-stop-session">
+                <span class="cc-card__icon" aria-hidden="true">◼</span>
+                <span class="cc-card__label">Stop session</span>
               </button>
             </div>
           </section>
 
-          <!-- Model & Thinking -->
-          <section class="control-section">
-            <h3 class="control-section-title">Intelligence</h3>
-            <div class="control-grid control-grid-1x2">
-              <button id="cc-model" class="control-card control-card-wide">
-                <div class="control-card-icon">🤖</div>
-                <div class="control-card-content">
-                  <div class="control-card-label">Model</div>
-                  <div class="control-card-value" id="cc-model-value">—</div>
-                </div>
-                <div class="control-card-chevron">›</div>
-              </button>
-              <button id="cc-thinking" class="control-card control-card-wide">
-                <div class="control-card-icon">🧠</div>
-                <div class="control-card-content">
-                  <div class="control-card-label">Thinking Level</div>
-                  <div class="control-card-value" id="cc-thinking-value">—</div>
-                </div>
-                <div class="control-card-chevron">›</div>
-              </button>
-            </div>
+          <!-- Model -->
+          <section class="cc-section">
+            <h3 class="cc-section-title">Model</h3>
+            <button class="cc-model-chip" id="cc-model-chip">
+              <span id="cc-model-name">—</span>
+              <span class="cc-model-chevron" aria-hidden="true">›</span>
+            </button>
           </section>
 
-          <!-- Browse -->
-          <section class="control-section">
-            <h3 class="control-section-title">Browse</h3>
-            <div class="control-grid control-grid-1x2">
-              <button id="cc-sessions" class="control-card control-card-wide">
-                <div class="control-card-icon">💬</div>
-                <div class="control-card-content">
-                  <div class="control-card-label">Sessions</div>
-                  <div class="control-card-desc">View & switch sessions</div>
-                </div>
-                <div class="control-card-chevron">›</div>
-              </button>
-              <button id="cc-tree" class="control-card control-card-wide">
-                <div class="control-card-icon">🌳</div>
-                <div class="control-card-content">
-                  <div class="control-card-label">Session Tree</div>
-                  <div class="control-card-desc">Browse conversation branches</div>
-                </div>
-                <div class="control-card-chevron">›</div>
-              </button>
-            </div>
-          </section>
-
-          <!-- Stats -->
-          <section class="control-section">
-            <h3 class="control-section-title">Analytics</h3>
-            <div class="control-grid control-grid-1x2">
-              <button id="cc-stats" class="control-card control-card-wide">
-                <div class="control-card-icon">📊</div>
-                <div class="control-card-content">
-                  <div class="control-card-label">Session Stats</div>
-                  <div class="control-card-desc">Messages, tokens, timing</div>
-                </div>
-                <div class="control-card-chevron">›</div>
-              </button>
-              <button id="cc-cost" class="control-card control-card-wide">
-                <div class="control-card-icon">💰</div>
-                <div class="control-card-content">
-                  <div class="control-card-label">Cost</div>
-                  <div class="control-card-desc">Token usage & cost</div>
-                </div>
-                <div class="control-card-chevron">›</div>
-              </button>
-            </div>
-          </section>
-
-          <!-- Danger Zone -->
-          <section class="control-section danger-section">
-            <h3 class="control-section-title">Danger Zone</h3>
-            <div class="control-grid control-grid-1x1">
-              <button id="cc-abort" class="control-card control-card-danger">
-                <div class="control-card-icon">⛔</div>
-                <div class="control-card-content">
-                  <div class="control-card-label">Abort</div>
-                  <div class="control-card-desc">Stop current operation</div>
-                </div>
+          <!-- Danger zone -->
+          <section class="cc-section cc-section--danger">
+            <h3 class="cc-section-title cc-section-title--danger">Danger</h3>
+            <div class="cc-card-list">
+              <button class="cc-card cc-card--danger" id="cc-kill-server">
+                <span class="cc-card__icon" aria-hidden="true">✕</span>
+                <span class="cc-card__label">Kill server</span>
               </button>
             </div>
           </section>

@@ -1330,8 +1330,24 @@ select {
 }
 
 /* ==========================================================================
-   Command Strip
-   ========================================================================== */
+    Quick Commands (static chips)
+    ========================================================================== */
+
+.quick-commands {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 6px 12px 0;
+  scrollbar-width: none;
+}
+
+.quick-commands::-webkit-scrollbar {
+  display: none;
+}
+
+/* ==========================================================================
+    Command Strip
+    ========================================================================== */
 
 .command-strip {
   display: flex;
@@ -2596,4 +2612,58 @@ html, body {
 .badge--error {
   background: var(--danger, #ff8d8d);
   color: var(--text-inverse, #071018);
+}
+
+/* ==========================================================================
+   Chat Empty State
+   ========================================================================== */
+
+.chat-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  height: 100%;
+  color: var(--text-tertiary, #666);
+  text-align: center;
+  padding: 32px;
+}
+
+.chat-empty-state p {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.chat-empty-state button {
+  min-width: 140px;
+}
+
+/* ==========================================================================
+   Streaming Cursor
+   ========================================================================== */
+
+.message--streaming .message-body::after {
+  content: "│";
+  animation: blink 1s step-start infinite;
+  color: var(--accent-primary, #7fd4ff);
+  margin-left: 1px;
+  font-weight: 300;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* ==========================================================================
+   Reconnect Notice
+   ========================================================================== */
+
+.reconnect-notice {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-tertiary, #666);
+  padding: 4px 0;
+  margin: 4px 0;
+  font-style: italic;
 }

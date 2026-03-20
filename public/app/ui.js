@@ -525,25 +525,50 @@ export function isTouchDevice() {
 
 export function openControlCenter() {
   if (!el.controlCenter) return;
-  
-  // Update model and thinking values
-  if (el.ccModelValue && state.snapshotState?.model) {
-    el.ccModelValue.textContent = state.snapshotState.model.name || state.snapshotState.model.id || "Default";
-  }
-  if (el.ccThinkingValue && state.snapshotState?.thinkingLevel) {
-    el.ccThinkingValue.textContent = state.snapshotState.thinkingLevel;
-  }
-  
+
+  // Update session info in control center
+  updateCcSessionInfo();
+
   el.controlCenter.classList.remove("hidden");
   document.body.style.overflow = "hidden"; // Prevent background scrolling
-  
+
   // Haptic feedback
   triggerHapticFeedback([20]);
-  
+
   // Focus management
   setTimeout(() => {
     el.controlCenterCloseButton?.focus();
   }, 100);
+}
+
+// Call this when the control center opens to populate info
+export function updateCcSessionInfo() {
+  const current = state.activeSessions.find(s => s.id === state.activeSessionId)
+    || state.activeSessions[0];
+
+  const goalEl = document.getElementById("cc-goal");
+  const projectEl = document.getElementById("cc-project");
+  const statusEl = document.getElementById("cc-status-badge");
+  const modelEl = document.getElementById("cc-model-name");
+
+  if (el.ccGoal) el.ccGoal.textContent = current?.firstUserPreview || "No messages yet";
+
+  if (el.ccProject) {
+    const cwd = current?.cwd || current?.secondaryLabel || "";
+    el.ccProject.textContent = cwd.split("/").filter(Boolean).pop() || "—";
+  }
+
+  if (el.ccStatusBadge && current) {
+    const status = current.lastError ? "error"
+      : current.isStreaming ? "streaming"
+      : current.hasPendingUiRequest ? "waiting"
+      : "idle";
+    const labels = { streaming: "streaming", waiting: "waiting", idle: "idle", error: "error" };
+    el.ccStatusBadge.textContent = labels[status];
+    el.ccStatusBadge.className = `session-badge badge--${status}`;
+  }
+
+  if (el.ccModelName) el.ccModelName.textContent = state.snapshotState?.model || "—";
 }
 
 export function closeControlCenter() {
@@ -685,4 +710,64 @@ export function updateControlCenterValues() {
   if (el.ccThinkingValue && state.snapshotState?.thinkingLevel) {
     el.ccThinkingValue.textContent = state.snapshotState.thinkingLevel;
   }
+}
+
+// ==========================================================================
+// Chat Empty State
+// ==========================================================================
+
+export function renderChatEmptyState() {
+  const messages = document.getElementById("messages");
+  if (!messages) return;
+
+  const hasSession = state.activeSessions?.length > 0;
+  const hasMessages = state.messages?.length > 0 || state.liveAssistant;
+
+  let emptyEl = document.getElementById("chat-empty-state");
+
+  if (!hasSession && !hasMessages) {
+    if (!emptyEl) {
+      emptyEl = document.createElement("div");
+      emptyEl.id = "chat-empty-state";
+      emptyEl.className = "chat-empty-state";
+
+      const msg = document.createElement("p");
+      msg.textContent = "No session open";
+
+      const btn = document.createElement("button");
+      btn.className = "btn-primary";
+      btn.textContent = "Go to Sessions";
+      btn.addEventListener("click", () => {
+        // Switch to sessions tab
+        const sessionsTab = document.querySelector('.tab-btn[data-tab="sessions"]');
+        if (sessionsTab) sessionsTab.click();
+      });
+
+      emptyEl.appendChild(msg);
+      emptyEl.appendChild(btn);
+      messages.appendChild(emptyEl);
+    }
+  } else if (emptyEl) {
+    emptyEl.remove();
+  }
+}
+
+// ==========================================================================
+// Keyboard Handling (visualViewport for mobile keyboard)
+// ==========================================================================
+
+export function initKeyboardHandling() {
+  if (!window.visualViewport) return;
+
+  function onViewportResize() {
+    const composer = document.querySelector(".composer-wrap");
+    if (!composer) return;
+    // When keyboard opens, visualViewport.height shrinks.
+    // Add the gap as padding so composer floats above keyboard.
+    const gap = window.innerHeight - window.visualViewport.offsetTop - window.visualViewport.height;
+    composer.style.paddingBottom = `max(${Math.max(0, gap)}px, env(safe-area-inset-bottom, 0px))`;
+  }
+
+  window.visualViewport.addEventListener("resize", onViewportResize);
+  window.visualViewport.addEventListener("scroll", onViewportResize);
 }
