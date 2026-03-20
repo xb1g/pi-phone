@@ -212,6 +212,7 @@ export class PhoneSessionWorker {
       sessionName,
       label,
       secondaryLabel,
+      cwd: this.options.cwd,
       firstUserPreview: this.firstUserPreview || null,
       lastUserPreview: this.lastUserPreview || null,
       model: this.lastState?.model

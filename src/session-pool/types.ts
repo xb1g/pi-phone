@@ -7,6 +7,7 @@ export type SessionSummary = {
   sessionName: string | null;
   label: string;
   secondaryLabel: string;
+  cwd: string;
   firstUserPreview: string | null;
   lastUserPreview: string | null;
   model: { id: string; name: string; provider: string } | null;
