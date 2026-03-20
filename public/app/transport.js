@@ -1,5 +1,16 @@
 import { state } from "./state.js";
 import { openTokenModal, renderHeader, renderQuota, showBanner, showToast } from "./ui.js";
+import { clearTransientState } from "./messages.js";
+
+function appendReconnectNotice() {
+  const messages = document.getElementById("messages");
+  if (!messages) return;
+  const notice = document.createElement("div");
+  notice.className = "reconnect-notice";
+  notice.textContent = "↩ Reconnected";
+  messages.appendChild(notice);
+  messages.scrollTop = messages.scrollHeight;
+}
 
 export function clearReconnectTimer() {
   if (!state.reconnectTimer) return;
@@ -101,6 +112,9 @@ export function connectSocket({ handleEnvelope, handleAuthFailure }) {
   const url = new URL(`${protocol}://${window.location.host}/ws`);
   if (state.token) url.searchParams.set("token", state.token);
 
+  // Track if this is a reconnect (we had a previous socket that closed)
+  const hadPreviousSocket = state.socket !== null;
+
   const socket = new WebSocket(url);
   state.socket = socket;
   renderHeader();
@@ -110,6 +124,12 @@ export function connectSocket({ handleEnvelope, handleAuthFailure }) {
     showBanner("");
     renderHeader();
     refreshAll();
+
+    // Show reconnect notice if this was a reconnect
+    if (hadPreviousSocket) {
+      clearTransientState();
+      appendReconnectNotice();
+    }
   });
 
   socket.addEventListener("message", (event) => {

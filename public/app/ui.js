@@ -583,91 +583,61 @@ export function closeControlCenter() {
 
 export function setupControlCenter() {
   if (!el.controlCenter) return;
-  
+
   // Close button
   el.controlCenterCloseButton?.addEventListener("click", closeControlCenter);
-  
+
   // Backdrop click
   el.controlCenterBackdrop?.addEventListener("click", closeControlCenter);
-  
+
   // Escape key
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && !el.controlCenter.classList.contains("hidden")) {
       closeControlCenter();
     }
   });
-  
+
   // Swipe down to close (touch)
   let touchStartY = 0;
-  const content = el.controlCenter.querySelector(".control-center-content");
-  
+  const content = el.controlCenter.querySelector(".cc-scroll");
+
   content?.addEventListener("touchstart", (e) => {
     touchStartY = e.touches[0].clientY;
   }, { passive: true });
-  
+
   content?.addEventListener("touchmove", (e) => {
     const touchY = e.touches[0].clientY;
     const scrollTop = content.scrollTop;
-    
+
     // Only swipe to close if at top of scroll
     if (scrollTop === 0 && touchY > touchStartY + 50) {
       closeControlCenter();
     }
   }, { passive: true });
-  
+
   // Control card actions
   el.ccNewSession?.addEventListener("click", () => {
     handleControlCenterAction("new");
     closeControlCenter();
   });
-  
-  el.ccCompact?.addEventListener("click", () => {
-    handleControlCenterAction("compact");
+
+  el.ccSwitchSession?.addEventListener("click", () => {
+    closeControlCenter();
+    import("./navigation.js").then(({ switchTab }) => switchTab("sessions"));
+  });
+
+  el.ccStopSession?.addEventListener("click", () => {
+    handleControlCenterAction("stop_session");
     closeControlCenter();
   });
-  
-  el.ccReload?.addEventListener("click", () => {
-    handleControlCenterAction("reload");
-    closeControlCenter();
+
+  el.ccKillServer?.addEventListener("click", () => {
+    if (!window.confirm("Kill the Pi Phone server? This will disconnect all clients.")) return;
+    handleControlCenterAction("stop");
   });
-  
-  el.ccRefresh?.addEventListener("click", () => {
-    handleControlCenterAction("refresh");
-    closeControlCenter();
-  });
-  
-  el.ccModel?.addEventListener("click", () => {
+
+  el.ccModelChip?.addEventListener("click", () => {
     handleControlCenterAction("model");
-    closeControlCenter();
-  });
-  
-  el.ccThinking?.addEventListener("click", () => {
-    handleControlCenterAction("thinking");
-    closeControlCenter();
-  });
-  
-  el.ccSessions?.addEventListener("click", () => {
-    handleControlCenterAction("sessions");
-    closeControlCenter();
-  });
-  
-  el.ccTree?.addEventListener("click", () => {
-    handleControlCenterAction("tree");
-    closeControlCenter();
-  });
-  
-  el.ccStats?.addEventListener("click", () => {
-    handleControlCenterAction("stats");
-    closeControlCenter();
-  });
-  
-  el.ccCost?.addEventListener("click", () => {
-    handleControlCenterAction("cost");
-    closeControlCenter();
-  });
-  
-  el.ccAbort?.addEventListener("click", () => {
-    handleControlCenterAction("abort");
     closeControlCenter();
   });
 }
@@ -675,41 +645,23 @@ export function setupControlCenter() {
 function handleControlCenterAction(action) {
   // Trigger haptic feedback
   triggerHapticFeedback([15]);
-  
+
   // Dispatch custom event for the action
   const event = new CustomEvent("control-center-action", {
     detail: { action },
     bubbles: true,
   });
   document.dispatchEvent(event);
-  
+
   // Show toast confirmation
   const actionNames = {
     new: "Starting new session…",
-    compact: "Compacting session…",
-    reload: "Reloading extensions…",
-    refresh: "Refreshing state…",
+    stop_session: "Stopping session…",
+    stop: "Stopping server…",
     model: "Opening model picker…",
-    thinking: "Opening thinking levels…",
-    sessions: "Opening sessions browser…",
-    tree: "Opening session tree…",
-    stats: "Opening stats…",
-    cost: "Opening cost breakdown…",
-    abort: "Aborting operation…",
   };
-  
-  showToast(actionNames[action] || `Executing ${action}…`, "info");
-}
 
-export function updateControlCenterValues() {
-  if (!el.controlCenter || el.controlCenter.classList.contains("hidden")) return;
-  
-  if (el.ccModelValue && state.snapshotState?.model) {
-    el.ccModelValue.textContent = state.snapshotState.model.name || state.snapshotState.model.id || "Default";
-  }
-  if (el.ccThinkingValue && state.snapshotState?.thinkingLevel) {
-    el.ccThinkingValue.textContent = state.snapshotState.thinkingLevel;
-  }
+  showToast(actionNames[action] || `Executing ${action}…`, "info");
 }
 
 // ==========================================================================

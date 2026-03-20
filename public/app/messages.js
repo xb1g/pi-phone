@@ -282,8 +282,10 @@ function renderMessage(item) {
       ? renderDetailSection("Details", toDetailString(detailValue))
       : "";
 
+  const streamingClass = item.live ? "message--streaming" : "";
+
   return `
-    <article class="message ${item.kind}">
+    <article class="message ${item.kind} ${streamingClass}">
       <div class="message-header">
         <div class="role-badge">${escapeHtml(roleLabel)}${item.live ? " · live" : ""}</div>
         <div class="meta">${escapeHtml(item.meta || "")}</div>

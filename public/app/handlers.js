@@ -17,6 +17,7 @@ import {
   clearUiModal,
   openTokenModal,
   openUiModalForRequest,
+  renderChatEmptyState,
   renderHeader,
   resetToken,
   showBanner,
@@ -340,6 +341,7 @@ export async function handleEnvelope(event) {
 
     renderHeader();
     renderSheet();
+    renderChatEmptyState();
     return;
   }
 
