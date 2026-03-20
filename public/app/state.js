@@ -11,6 +11,8 @@ export const state = {
   sessions: [],
   activeSessions: [],
   activeSessionId: null,
+  activeTab: "chat",
+  previousTab: "chat",
   tree: null,
   stats: null,
   widgets: new Map(),

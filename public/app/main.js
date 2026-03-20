@@ -2,6 +2,7 @@ import { initializeBindings } from "./bindings.js";
 import { handleAuthFailure, handleEnvelope } from "./handlers.js";
 import { boot } from "./transport.js";
 import { initTheme, toggleTheme, triggerHapticFeedback, setupControlCenter, openControlCenter, closeControlCenter, initKeyboardHandling } from "./ui.js";
+import { initNavigation } from "./navigation.js";
 import { el } from "./state.js";
 
 // Initialize theme on load
@@ -78,6 +79,7 @@ function initializeUI() {
   setupAccessibility();
   initKeyboardHandling();
   setupQuickCommands();
+  initNavigation();
 }
 
 // Setup quick command chips
