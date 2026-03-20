@@ -166,7 +166,7 @@ function trapFocusInModal(modal, event) {
 function registerServiceWorker() {
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("/sw.js?v=20260320-1")
+      navigator.serviceWorker.register("/sw.js?v=20260320-2")
         .then((registration) => {
           console.log("SW registered:", registration.scope);
         })
